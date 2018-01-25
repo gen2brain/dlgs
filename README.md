@@ -1,6 +1,6 @@
 ## dlgs
-[![TravisCI Build Status](https://travis-ci.org/gen2brain/dlgs.svg?branch=master)](https://travis-ci.org/gen2brain/beeep)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/4u7avrhsdxua2c9b?svg=true)](https://ci.appveyor.com/project/gen2brain/dlgs)
+[![TravisCI Build Status](https://travis-ci.org/gen2brain/dlgs.svg?branch=master)](https://travis-ci.org/gen2brain/dlgs)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/52ekhdkai4r12un3?svg=true)](https://ci.appveyor.com/project/gen2brain/dlgs)
 [![GoDoc](https://godoc.org/github.com/gen2brain/dlgs?status.svg)](https://godoc.org/github.com/gen2brain/dlgs)
 [![Go Report Card](https://goreportcard.com/badge/github.com/gen2brain/dlgs?branch=master)](https://goreportcard.com/report/github.com/gen2brain/dlgs)
 
