@@ -13,6 +13,11 @@ import (
 
 // Color displays a color selection dialog, returning the selected color and a bool for success.
 func Color(title, defaultColorHex string) (color.Color, bool, error) {
+	return nil, false, ErrNotImplemented
+}
+
+// FIXME `osascript -e 'choose color'` just hangs and waits
+func colorDarwin(title, defaultColorHex string) (color.Color, bool, error) {
 	osa, err := exec.LookPath("osascript")
 	if err != nil {
 		return nil, false, err
