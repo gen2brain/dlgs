@@ -74,6 +74,7 @@ func listBox(title, text, className string, items []string, multi bool) (string,
 	if err != nil {
 		return out, false, err
 	}
+	defer unregisterClass(className, instance)
 
 	hwnd, _ := createWindow(0, className, title, wsOverlappedWindow, swUseDefault, swUseDefault, 235, 300, 0, 0, instance)
 	hwndText, _ := createWindow(0, "STATIC", text, wsChild|wsVisible, 10, 10, 200, 16, hwnd, 0, instance)
