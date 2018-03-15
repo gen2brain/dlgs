@@ -13,11 +13,6 @@ import (
 
 // Color displays a color selection dialog, returning the selected color and a bool for success.
 func Color(title, defaultColorHex string) (color.Color, bool, error) {
-	return nil, false, ErrNotImplemented
-}
-
-// FIXME `osascript -e 'choose color'` just hangs and waits
-func colorDarwin(title, defaultColorHex string) (color.Color, bool, error) {
 	osa, err := exec.LookPath("osascript")
 	if err != nil {
 		return nil, false, err
@@ -30,7 +25,7 @@ func colorDarwin(title, defaultColorHex string) (color.Color, bool, error) {
 	g := strconv.Itoa(int(ug))
 	b := strconv.Itoa(int(ub))
 
-	o, err := exec.Command(osa, "-e", `set T to choose color default color {`+r+`, `+g+`, `+b+`}`).Output()
+	o, err := exec.Command(osa, "-e", `tell application "Finder"`, "-e", "activate", "-e", `choose color default color {`+r+`, `+g+`, `+b+`}`, "-e", "end tell").Output()
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
 			ws := exitError.Sys().(syscall.WaitStatus)
