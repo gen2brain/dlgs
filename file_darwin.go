@@ -4,6 +4,7 @@ package dlgs
 
 import (
 	"os/exec"
+	"path"
 	"strings"
 	"syscall"
 )
@@ -40,7 +41,7 @@ func File(title, filter string, directory bool) (string, bool, error) {
 	}
 
 	tmp := strings.Split(out, ":")
-	outPath := "/" + strings.Join(tmp[1:len(tmp)-1], "/")
+	outPath := "/" + path.Join(tmp[1:]...)
 
 	return outPath, ret, err
 }
@@ -76,7 +77,7 @@ func FileMulti(title, filter string) ([]string, bool, error) {
 	l := strings.Split(out, ", ")
 	for _, p := range l {
 		tmp := strings.Split(p, ":")
-		paths = append(paths, "/"+strings.Join(tmp[1:], "/"))
+		paths = append(paths, "/"+path.Join(tmp[1:]...))
 	}
 
 	return paths, ret, err
