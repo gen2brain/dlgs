@@ -8,7 +8,11 @@ import (
 	"syscall"
 )
 
-// File displays a file dialog, returning the selected file/directory and a bool for success.
+// File displays a file dialog, returning the selected file or directory, a bool for success, and an
+// error if it was unable to display the dialog. Filter is a string that determines 
+// which extensions should be displayed for the dialog. Separate multiple file 
+// extensions by spaces and use "*.extension" format for cross-platform compatibility, e.g. "*.png *.jpg".
+// A blank string for the filter will display all file types.
 func File(title, filter string, directory bool) (string, bool, error) {
 	cmd, err := cmdPath()
 	if err != nil {
@@ -42,7 +46,11 @@ func File(title, filter string, directory bool) (string, bool, error) {
 	return out, ret, err
 }
 
-// FileMulti displays a file dialog, returning the selected files and a bool for success.
+// FileMulti displays a file dialog that allows for selecting multiple files. It returns the selected 
+// files, a bool for success, and an error if it was unable to display the dialog. Filter is a string 
+// that determines which files should be available for selection in the dialog. Separate multiple file 
+// extensions by spaces and use "*.extension" format for cross-platform compatibility, e.g. "*.png *.jpg".
+// A blank string for the filter will display all file types.
 func FileMulti(title, filter string) ([]string, bool, error) {
 	cmd, err := cmdPath()
 	if err != nil {

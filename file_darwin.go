@@ -9,7 +9,11 @@ import (
 	"syscall"
 )
 
-// File displays a file dialog, returning the selected file/directory and a bool for success.
+// File displays a file dialog, returning the selected file or directory, a bool for success, and an
+// error if it was unable to display the dialog. Filter is a string that determines 
+// which extensions should be displayed for the dialog. Separate multiple file 
+// extensions by spaces and use "*.extension" format for cross-platform compatibility, e.g. "*.png *.jpg".
+// A blank string for the filter will display all file types.
 func File(title, filter string, directory bool) (string, bool, error) {
 	osa, err := exec.LookPath("osascript")
 	if err != nil {
@@ -23,7 +27,16 @@ func File(title, filter string, directory bool) (string, bool, error) {
 
 	t := ""
 	if filter != "" {
-		t = ` of type {"` + filter + `"}`
+		t = ` of type {`
+		patterns := strings.Split(filter, " ")
+		for i, p := range patterns {
+			p = strings.Trim(p, "*.")
+			t += `"` + p + `"`
+			if i < len(patterns)-1 {
+				t += ", "
+			}
+		}
+		t += "}"
 	}
 
 	o, err := exec.Command(osa, "-e", `choose `+f+t+` with prompt "`+title+`"`).Output()
@@ -46,7 +59,11 @@ func File(title, filter string, directory bool) (string, bool, error) {
 	return outPath, ret, err
 }
 
-// FileMulti displays a file dialog, returning the selected files and a bool for success.
+// FileMulti displays a file dialog that allows for selecting multiple files. It returns the selected 
+// files, a bool for success, and an error if it was unable to display the dialog. Filter is a string 
+// that determines which files should be available for selection in the dialog. Separate multiple file 
+// extensions by spaces and use "*.extension" format for cross-platform compatibility, e.g. "*.png *.jpg".
+// A blank string for the filter will display all file types.
 func FileMulti(title, filter string) ([]string, bool, error) {
 	osa, err := exec.LookPath("osascript")
 	if err != nil {
@@ -55,9 +72,17 @@ func FileMulti(title, filter string) ([]string, bool, error) {
 
 	t := ""
 	if filter != "" {
-		t = ` of type {"` + filter + `"}`
+		t = ` of type {`
+		patterns := strings.Split(filter, " ")
+		for i, p := range patterns {
+			p = strings.Trim(p, "*.")
+			t += `"` + p + `"`
+			if i < len(patterns)-1 {
+				t += ", "
+			}
+		}
+		t += "}"
 	}
-
 	o, err := exec.Command(osa, "-e", `choose file `+t+` with multiple selections allowed with prompt "`+title+`"`).Output()
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
