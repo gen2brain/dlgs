@@ -31,13 +31,9 @@ func List(title, text string, items []string) (string, bool, error) {
 		}
 	}
 
-	ret := true
 	out := strings.TrimSpace(string(o))
-	if out == "" {
-		ret = false
-	}
 
-	return out, ret, err
+	return out, true, err
 }
 
 // ListMulti displays a multiple list dialog, returning the selected values and a bool for success.
@@ -63,11 +59,7 @@ func ListMulti(title, text string, items []string) ([]string, bool, error) {
 		}
 	}
 
-	ret := true
 	out := strings.TrimSpace(string(o))
-	if out == "" {
-		ret = false
-	}
 
-	return strings.Split(out, ", "), ret, err
+	return strings.Split(out, ", "), true, err
 }

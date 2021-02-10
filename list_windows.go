@@ -112,10 +112,5 @@ func listBox(title, text, className string, items []string, multi bool) (string,
 		return out, false, err
 	}
 
-	ret := false
-	if out != "" {
-		ret = true
-	}
-
-	return out, ret, nil
+	return out, true, nil
 }
