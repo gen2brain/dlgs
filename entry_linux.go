@@ -23,11 +23,7 @@ func Entry(title, text, defaultText string) (string, bool, error) {
 		}
 	}
 
-	ret := true
 	out := strings.TrimSpace(string(o))
-	if out == "" {
-		ret = false
-	}
 
-	return out, ret, err
+	return out, true, err
 }

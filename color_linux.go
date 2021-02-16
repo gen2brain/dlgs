@@ -26,13 +26,9 @@ func Color(title, defaultColorHex string) (color.Color, bool, error) {
 		}
 	}
 
-	ret := true
 	out := strings.TrimSpace(string(o))
-	if out == "" {
-		ret = false
-	}
 
-	return parseColor(out), ret, err
+	return parseColor(out), true, err
 }
 
 // parseColor returns color from output string.

@@ -18,7 +18,10 @@ func Date(title, text string, defaultDate time.Time) (time.Time, bool, error) {
 	}
 
 	o, err := exec.Command(cmd, "--calendar", "--title", title, "--text", text,
-		"--day", strconv.Itoa(defaultDate.Day()), "--month", strconv.Itoa(int(defaultDate.Month())), "--year", strconv.Itoa(defaultDate.Year())).Output()
+		"--day", strconv.Itoa(defaultDate.Day()),
+		"--month", strconv.Itoa(int(defaultDate.Month())),
+		"--year", strconv.Itoa(defaultDate.Year()),
+		`--date-format=%d/%m/%Y`).Output()
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
 			ws := exitError.Sys().(syscall.WaitStatus)
@@ -26,19 +29,12 @@ func Date(title, text string, defaultDate time.Time) (time.Time, bool, error) {
 		}
 	}
 
-	ret := true
 	out := strings.TrimSpace(string(o))
-	if out == "" {
-		ret = false
+
+	tim, err := time.Parse("02/01/2006", out)
+	if err == nil {
+		return tim, true, nil
 	}
 
-	tim, err := time.Parse("1/2/06", out)
-	if err != nil {
-		tim, err = time.Parse("01/02/2006", out)
-		if err != nil {
-			return time.Now(), false, err
-		}
-	}
-
-	return tim, ret, err
+	return time.Now(), false, err
 }

@@ -22,6 +22,7 @@ func ListMulti(title, text string, items []string) ([]string, bool, error) {
 // listBox displays list dialog.
 func listBox(title, text, className string, items []string, multi bool) (string, bool, error) {
 	var out string
+	notCancledOrClosed := true
 	var hwndList syscall.Handle
 
 	instance, err := getModuleHandle()
@@ -32,11 +33,13 @@ func listBox(title, text, className string, items []string, multi bool) (string,
 	fn := func(hwnd syscall.Handle, msg uint32, wparam, lparam uintptr) uintptr {
 		switch msg {
 		case wmClose:
+			notCancledOrClosed = false
 			destroyWindow(hwnd)
 		case wmDestroy:
 			postQuitMessage(0)
 		case wmKeydown:
 			if wparam == vkEscape {
+				notCancledOrClosed = false
 				destroyWindow(hwnd)
 			}
 		case wmCommand:
@@ -60,6 +63,7 @@ func listBox(title, text, className string, items []string, multi bool) (string,
 
 				destroyWindow(hwnd)
 			} else if wparam == 110 {
+				notCancledOrClosed = false
 				destroyWindow(hwnd)
 			}
 		default:
@@ -112,10 +116,5 @@ func listBox(title, text, className string, items []string, multi bool) (string,
 		return out, false, err
 	}
 
-	ret := false
-	if out != "" {
-		ret = true
-	}
-
-	return out, ret, nil
+	return out, notCancledOrClosed, nil
 }

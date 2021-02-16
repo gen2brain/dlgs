@@ -10,8 +10,8 @@ import (
 )
 
 // File displays a file dialog, returning the selected file or directory, a bool for success, and an
-// error if it was unable to display the dialog. Filter is a string that determines 
-// which extensions should be displayed for the dialog. Separate multiple file 
+// error if it was unable to display the dialog. Filter is a string that determines
+// which extensions should be displayed for the dialog. Separate multiple file
 // extensions by spaces and use "*.extension" format for cross-platform compatibility, e.g. "*.png *.jpg".
 // A blank string for the filter will display all file types.
 func File(title, filter string, directory bool) (string, bool, error) {
@@ -47,21 +47,16 @@ func File(title, filter string, directory bool) (string, bool, error) {
 		}
 	}
 
-	ret := true
 	out := strings.TrimSpace(string(o))
-	if out == "" {
-		ret = false
-	}
-
 	tmp := strings.Split(out, ":")
 	outPath := "/" + path.Join(tmp[1:]...)
 
-	return outPath, ret, err
+	return outPath, true, err
 }
 
-// FileMulti displays a file dialog that allows for selecting multiple files. It returns the selected 
-// files, a bool for success, and an error if it was unable to display the dialog. Filter is a string 
-// that determines which files should be available for selection in the dialog. Separate multiple file 
+// FileMulti displays a file dialog that allows for selecting multiple files. It returns the selected
+// files, a bool for success, and an error if it was unable to display the dialog. Filter is a string
+// that determines which files should be available for selection in the dialog. Separate multiple file
 // extensions by spaces and use "*.extension" format for cross-platform compatibility, e.g. "*.png *.jpg".
 // A blank string for the filter will display all file types.
 func FileMulti(title, filter string) ([]string, bool, error) {
@@ -91,11 +86,7 @@ func FileMulti(title, filter string) ([]string, bool, error) {
 		}
 	}
 
-	ret := true
 	out := strings.TrimSpace(string(o))
-	if out == "" {
-		ret = false
-	}
 
 	paths := make([]string, 0)
 
