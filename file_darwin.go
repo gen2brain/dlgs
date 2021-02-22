@@ -96,5 +96,5 @@ func FileMulti(title, filter string) ([]string, bool, error) {
 		paths = append(paths, "/"+path.Join(tmp[1:]...))
 	}
 
-	return paths, ret, err
+	return paths, true, err
 }
