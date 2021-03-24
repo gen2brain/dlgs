@@ -28,6 +28,7 @@ var (
 	unregisterClassW      = user32.NewProc("UnregisterClassW")
 	translateMessageW     = user32.NewProc("TranslateMessage")
 	setWindowTextW        = user32.NewProc("SetWindowTextW")
+	setFocus              = user32.NewProc("SetFocus")
 	getWindowTextLengthW  = user32.NewProc("GetWindowTextLengthW")
 	getWindowTextW        = user32.NewProc("GetWindowTextW")
 	getWindowLongW        = user32.NewProc("GetWindowLongW")
@@ -312,6 +313,15 @@ func createWindow(exStyle uint64, className, windowName string, style uint64, x,
 	return syscall.Handle(ret), nil
 }
 
+func setWindowFocus(instance syscall.Handle) (syscall.Handle, error) {
+	ret, _, err := setFocus.Call(uintptr(instance))
+	if ret == 0 {
+		return 0, err
+	}
+
+	return syscall.Handle(ret), nil
+}
+
 func destroyWindow(hwnd syscall.Handle) error {
 	ret, _, err := destroyWindowW.Call(uintptr(hwnd))
 	if ret == 0 {
@@ -588,6 +598,8 @@ func editBox(title, text, defaultText, className string, password bool) (string,
 
 	showWindow(hwnd, swShowNormal)
 	updateWindow(hwnd)
+
+	setWindowFocus(hwndEdit)
 
 	err = messageLoop(hwnd)
 	if err != nil {
