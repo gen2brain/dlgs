@@ -10,20 +10,15 @@ import (
 
 // List displays a list dialog, returning the selected value and a bool for success.
 func List(title, text string, items []string) (string, bool, error) {
-	osa, err := exec.LookPath("osascript")
-	if err != nil {
-		return "", false, err
-	}
-
 	list := ""
 	for i, l := range items {
-		list += `"` + l + `"`
+		list += osaEscapeString(l)
 		if i != len(items)-1 {
 			list += ", "
 		}
 	}
 
-	o, err := exec.Command(osa, "-e", `choose from list {`+list+`} with prompt "`+text+`" with title "`+title+`"`).Output()
+	o, err := osaExecute(`choose from list {` + list + `} with prompt ` + osaEscapeString(text) + ` with title ` + osaEscapeString(title))
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
 			ws := exitError.Sys().(syscall.WaitStatus)
@@ -31,27 +26,22 @@ func List(title, text string, items []string) (string, bool, error) {
 		}
 	}
 
-	out := strings.TrimSpace(string(o))
+	out := strings.TrimSpace(o)
 
 	return out, true, err
 }
 
 // ListMulti displays a multiple list dialog, returning the selected values and a bool for success.
 func ListMulti(title, text string, items []string) ([]string, bool, error) {
-	osa, err := exec.LookPath("osascript")
-	if err != nil {
-		return []string{}, false, err
-	}
-
 	list := ""
 	for i, l := range items {
-		list += `"` + l + `"`
+		list += osaEscapeString(l)
 		if i != len(items)-1 {
 			list += ", "
 		}
 	}
 
-	o, err := exec.Command(osa, "-e", `choose from list {`+list+`} with multiple selections allowed with prompt "`+text+`" with title "`+title+`"`).Output()
+	o, err := osaExecute(`choose from list {` + list + `} with multiple selections allowed with prompt ` + osaEscapeString(text) + ` with title ` + osaEscapeString(title))
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
 			ws := exitError.Sys().(syscall.WaitStatus)
@@ -59,7 +49,7 @@ func ListMulti(title, text string, items []string) ([]string, bool, error) {
 		}
 	}
 
-	out := strings.TrimSpace(string(o))
+	out := strings.TrimSpace(o)
 
 	return strings.Split(out, ", "), true, err
 }

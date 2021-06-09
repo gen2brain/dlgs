@@ -15,11 +15,6 @@ import (
 // extensions by spaces and use "*.extension" format for cross-platform compatibility, e.g. "*.png *.jpg".
 // A blank string for the filter will display all file types.
 func File(title, filter string, directory bool) (string, bool, error) {
-	osa, err := exec.LookPath("osascript")
-	if err != nil {
-		return "", false, err
-	}
-
 	f := "file"
 	if directory {
 		f = "folder"
@@ -31,7 +26,7 @@ func File(title, filter string, directory bool) (string, bool, error) {
 		patterns := strings.Split(filter, " ")
 		for i, p := range patterns {
 			p = strings.Trim(p, "*.")
-			t += `"` + p + `"`
+			t += osaEscapeString(p)
 			if i < len(patterns)-1 {
 				t += ", "
 			}
@@ -39,7 +34,7 @@ func File(title, filter string, directory bool) (string, bool, error) {
 		t += "}"
 	}
 
-	o, err := exec.Command(osa, "-e", `choose `+f+t+` with prompt "`+title+`"`).Output()
+	o, err := osaExecute(`choose ` + f + t + ` with prompt ` + osaEscapeString(title))
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
 			ws := exitError.Sys().(syscall.WaitStatus)
@@ -47,7 +42,7 @@ func File(title, filter string, directory bool) (string, bool, error) {
 		}
 	}
 
-	out := strings.TrimSpace(string(o))
+	out := strings.TrimSpace(o)
 	tmp := strings.Split(out, ":")
 	outPath := "/" + path.Join(tmp[1:]...)
 
@@ -60,25 +55,20 @@ func File(title, filter string, directory bool) (string, bool, error) {
 // extensions by spaces and use "*.extension" format for cross-platform compatibility, e.g. "*.png *.jpg".
 // A blank string for the filter will display all file types.
 func FileMulti(title, filter string) ([]string, bool, error) {
-	osa, err := exec.LookPath("osascript")
-	if err != nil {
-		return []string{}, false, err
-	}
-
 	t := ""
 	if filter != "" {
 		t = ` of type {`
 		patterns := strings.Split(filter, " ")
 		for i, p := range patterns {
 			p = strings.Trim(p, "*.")
-			t += `"` + p + `"`
+			t += osaEscapeString(p)
 			if i < len(patterns)-1 {
 				t += ", "
 			}
 		}
 		t += "}"
 	}
-	o, err := exec.Command(osa, "-e", `choose file `+t+` with multiple selections allowed with prompt "`+title+`"`).Output()
+	o, err := osaExecute(`choose file ` + t + ` with multiple selections allowed with prompt ` + osaEscapeString(title))
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
 			ws := exitError.Sys().(syscall.WaitStatus)
@@ -86,7 +76,7 @@ func FileMulti(title, filter string) ([]string, bool, error) {
 		}
 	}
 
-	out := strings.TrimSpace(string(o))
+	out := strings.TrimSpace(o)
 
 	paths := make([]string, 0)
 
