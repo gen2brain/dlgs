@@ -13,11 +13,6 @@ import (
 
 // Color displays a color selection dialog, returning the selected color and a bool for success.
 func Color(title, defaultColorHex string) (color.Color, bool, error) {
-	osa, err := exec.LookPath("osascript")
-	if err != nil {
-		return nil, false, err
-	}
-
 	var ur, ug, ub uint8
 	fmt.Sscanf(defaultColorHex, "#%02x%02x%02x", &ur, &ug, &ub)
 
@@ -25,7 +20,7 @@ func Color(title, defaultColorHex string) (color.Color, bool, error) {
 	g := strconv.Itoa(int(ug))
 	b := strconv.Itoa(int(ub))
 
-	o, err := exec.Command(osa, "-e", `tell application "Finder"`, "-e", "activate", "-e", `choose color default color {`+r+`, `+g+`, `+b+`}`, "-e", "end tell").Output()
+	o, err := osaExecute(`tell application "Finder"`, `activate`, `choose color default color {`+r+`, `+g+`, `+b+`}`, `end tell`)
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
 			ws := exitError.Sys().(syscall.WaitStatus)
@@ -33,8 +28,7 @@ func Color(title, defaultColorHex string) (color.Color, bool, error) {
 		}
 	}
 
-	out := strings.TrimSpace(string(o))
-
+	out := strings.TrimSpace(o)
 	return parseColor(out), true, err
 }
 
