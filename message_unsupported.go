@@ -2,6 +2,11 @@
 
 package dlgs
 
+// MessageBox displays message box and ok button without icon.
+func MessageBox(title, text string) (bool, error) {
+	return false, ErrUnsupported
+}
+
 // Info displays information dialog box.
 func Info(title, message string) (bool, error) {
 	return false, ErrUnsupported

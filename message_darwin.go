@@ -8,6 +8,11 @@ import (
 	"syscall"
 )
 
+// MessageBox displays message box and ok button without icon.
+func MessageBox(title, text string) (bool, error) {
+	return osaDialog(title, text, "")
+}
+
 // Info displays information dialog.
 func Info(title, text string) (bool, error) {
 	return osaDialog(title, text, "note")
@@ -48,7 +53,11 @@ func Question(title, text string, defaultCancel bool) (bool, error) {
 
 // osaDialog displays dialog.
 func osaDialog(title, text, icon string) (bool, error) {
-	out, err := osaExecute(`display dialog ` + osaEscapeString(text) + ` with title ` + osaEscapeString(title) + ` buttons {"OK"} default button "OK" with icon ` + icon + ``)
+	iconScript := ""
+	if icon != "" {
+		iconScript = ` with icon ` + icon
+	}
+	out, err := osaExecute(`display dialog ` + osaEscapeString(text) + ` with title ` + osaEscapeString(title) + ` buttons {"OK"} default button "OK"` + iconScript)
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
 			ws := exitError.Sys().(syscall.WaitStatus)
