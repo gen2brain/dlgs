@@ -25,7 +25,7 @@ func File(title, filter string, directory bool) (string, bool, error) {
 	}
 
 	fileFilter := ""
-	if filter != "" {
+	if filter != "" && !directory {
 		fileFilter = "--file-filter=" + filter
 	}
 
