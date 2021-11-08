@@ -21,7 +21,7 @@ func File(title, filter string, directory bool) (string, bool, error) {
 	}
 
 	t := ""
-	if filter != "" {
+	if filter != "" && !directory {
 		t = ` of type {`
 		patterns := strings.Split(filter, " ")
 		for i, p := range patterns {
