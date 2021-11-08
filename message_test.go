@@ -4,6 +4,17 @@ import (
 	"testing"
 )
 
+func TestMessageBox(t *testing.T) {
+	ret, err := MessageBox("MessageBox", "Lorem ipsum dolor sit amet.")
+	if err != nil {
+		t.Error(err)
+	}
+
+	if verboseTests {
+		println("ret:", ret)
+	}
+}
+
 func TestInfo(t *testing.T) {
 	ret, err := Info("Info", "Lorem ipsum dolor sit amet.")
 	if err != nil {
