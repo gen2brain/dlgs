@@ -6,6 +6,9 @@
 
 `dlgs` is a cross-platform library for displaying dialogs and input boxes.
 
+NOTE: This repository is archived and will not be maintained anymore.
+See https://github.com/ncruces/zenity for cgo-free dialogs, also check https://github.com/gen2brain/iup-go for full-blown UI. 
+
 ### Installation
 
     go get -u github.com/gen2brain/dlgs
